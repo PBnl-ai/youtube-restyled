@@ -79,6 +79,50 @@ ytd-rich-grid-row #contents {
   display: contents !important;
 }
 
+/* ============================================
+   SHELF SECTIONS (Breaking News, etc.)
+   Keep as horizontal scrollable row, don't flatten into grid
+   ============================================ */
+
+/* Section renderers (non-shorts) should span full width */
+ytd-rich-section-renderer:not([is-shorts-grid]):not(:has([is-shorts])):not(:has(ytd-reel-shelf-renderer)) {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* The shelf inside a section: horizontal scrollable row */
+ytd-rich-section-renderer ytd-rich-shelf-renderer:not([is-shorts]) {
+  display: block !important;
+  width: 100% !important;
+}
+
+ytd-rich-section-renderer ytd-rich-shelf-renderer:not([is-shorts]) #contents {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 16px !important;
+  padding: 0 0 12px 0 !important;
+  scrollbar-width: thin !important;
+}
+
+ytd-rich-section-renderer ytd-rich-shelf-renderer:not([is-shorts]) #contents > * {
+  flex: 0 0 300px !important;
+  max-width: 300px !important;
+  min-width: 280px !important;
+}
+
+/* Section title (e.g. "Breaking news") */
+ytd-rich-section-renderer #title-text,
+ytd-rich-section-renderer .ytd-rich-shelf-renderer #title-text,
+ytd-rich-section-renderer h2 {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: var(--ytr-text) !important;
+  margin-bottom: 12px !important;
+}
+
 /* Each video card - calculate width for 4 columns */
 /* With gap 20px horizontal: 3 gaps = 60px, so each card = (100% - 60px) / 4 */
 ytd-rich-item-renderer {
@@ -995,6 +1039,46 @@ ytd-search #container {
   margin: 0 !important;
   padding: 0 !important;
   max-width: 100% !important;
+}
+
+/* ============================================
+   CHANNEL PAGE - Fix empty space above thumbnails
+   ============================================ */
+
+/* Channel page grid uses ytd-grid-video-renderer or ytd-rich-item-renderer */
+/* Fix the ::before padding-top aspect ratio placeholder that creates blank space */
+ytd-browse[page-subtype="channels"] ytd-thumbnail::before,
+ytd-browse[page-subtype="channels"] yt-thumbnail-view-model::before,
+ytd-grid-video-renderer ytd-thumbnail::before,
+ytd-grid-video-renderer yt-thumbnail-view-model::before,
+ytd-rich-item-renderer ytd-thumbnail::before,
+ytd-rich-item-renderer yt-thumbnail-view-model::before {
+  display: none !important;
+  padding-top: 0 !important;
+}
+
+/* Channel grid items - proper sizing */
+ytd-grid-video-renderer {
+  margin: 0 !important;
+}
+
+/* Channel tab content - flex grid */
+ytd-browse[page-subtype="channels"] #contents.ytd-grid-renderer {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 28px 20px !important;
+}
+
+ytd-browse[page-subtype="channels"] ytd-grid-video-renderer {
+  flex: 0 0 calc(25% - 15px) !important;
+  max-width: calc(25% - 15px) !important;
+}
+
+@media (max-width: 1400px) {
+  ytd-browse[page-subtype="channels"] ytd-grid-video-renderer {
+    flex: 0 0 calc(33.333% - 16px) !important;
+    max-width: calc(33.333% - 16px) !important;
+  }
 }
 
 /* ============================================

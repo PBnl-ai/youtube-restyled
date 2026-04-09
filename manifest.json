@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Restyled",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Een betere YouTube ervaring: compacte layout, nieuwe uploads indicator, en verbeterde creator pagina's",
   "permissions": [
     "storage",
