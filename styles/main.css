@@ -153,6 +153,19 @@ ytd-rich-item-renderer {
   transition: all 0.3s ease !important;
 }
 
+/* Force black on ALL inner card elements */
+ytd-rich-item-renderer #content,
+ytd-rich-item-renderer #dismissible,
+ytd-rich-item-renderer #details,
+ytd-rich-item-renderer #meta,
+ytd-rich-item-renderer #metadata,
+ytd-rich-item-renderer #metadata-line,
+ytd-rich-item-renderer ytd-rich-grid-media,
+ytd-rich-item-renderer #avatar-link,
+ytd-rich-item-renderer .ytd-rich-grid-media {
+  background: #000000 !important;
+}
+
 ytd-rich-item-renderer:hover {
   background: #000000 !important;
   border-color: var(--ytr-border) !important;
