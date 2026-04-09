@@ -327,42 +327,18 @@
     chips.forEach(chip => {
       chip.classList.add('ytr-chip-styled');
 
-      // Style chip container
-      chip.style.setProperty('background', 'rgba(0, 0, 0, 0.75)', 'important');
-      chip.style.setProperty('display', 'inline-block', 'important');
-      chip.style.setProperty('height', 'auto', 'important');
-      chip.style.setProperty('padding', '0', 'important');
-      chip.style.setProperty('margin-right', '6px', 'important');
-      chip.style.setProperty('border-radius', '0', 'important');
-
-      // Target the ytChipShapeChip - this is where the text actually is
-      const chipShape = chip.querySelector('.ytChipShapeChip');
-      if (chipShape) {
-        chipShape.style.setProperty('height', 'auto', 'important');
-        chipShape.style.setProperty('min-height', '0', 'important');
-        chipShape.style.setProperty('padding', '3px 6px', 'important');
-        chipShape.style.setProperty('font-family', "'JetBrains Mono', monospace", 'important');
-        chipShape.style.setProperty('font-size', '9px', 'important');
-        chipShape.style.setProperty('line-height', '1', 'important');
-        chipShape.style.setProperty('display', 'inline-block', 'important');
-        chipShape.style.setProperty('text-transform', 'uppercase', 'important');
-        chipShape.style.setProperty('letter-spacing', '0.05em', 'important');
-        chipShape.style.setProperty('color', 'rgba(255, 255, 255, 0.8)', 'important');
-        chipShape.style.setProperty('border-radius', '0', 'important');
-      }
+      // Reset inner elements for CSS to take over
+      chip.querySelectorAll('div, button, chip-shape').forEach(el => {
+        el.style.setProperty('height', 'auto', 'important');
+        el.style.setProperty('min-height', '0', 'important');
+        el.style.setProperty('border-radius', '0', 'important');
+      });
 
       // Hide touch feedback overlay
       const touchFeedback = chip.querySelector('yt-touch-feedback-shape');
       if (touchFeedback) {
         touchFeedback.style.setProperty('display', 'none', 'important');
       }
-
-      // Reset all other inner elements
-      chip.querySelectorAll('div, button, chip-shape').forEach(el => {
-        el.style.setProperty('height', 'auto', 'important');
-        el.style.setProperty('min-height', '0', 'important');
-        el.style.setProperty('border-radius', '0', 'important');
-      });
     });
   }
 

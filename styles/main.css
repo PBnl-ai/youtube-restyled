@@ -769,18 +769,13 @@ ytd-guide-downloads-entry-renderer #endpoint {
    FILTER CHIPS - Subtle, minimal style
    ============================================ */
 
-/* Chip bar container - compact like channel labels */
+/* Chip bar container */
 ytd-feed-filter-chip-bar-renderer {
   height: auto !important;
   min-height: auto !important;
-  padding: 8px 0 8px 24px !important;
+  padding: 12px 0 12px 24px !important;
   margin-left: 16px !important;
-  opacity: 0.8 !important;
-  transition: opacity 0.3s ease !important;
-}
-
-ytd-feed-filter-chip-bar-renderer:hover {
-  opacity: 1 !important;
+  border-bottom: 1px solid var(--ytr-border) !important;
 }
 
 ytd-feed-filter-chip-bar-renderer iron-selector,
@@ -790,6 +785,7 @@ ytd-feed-filter-chip-bar-renderer > div {
   min-height: auto !important;
   display: flex !important;
   align-items: center !important;
+  gap: 8px !important;
 }
 
 /* Force ALL chip elements to be square */
@@ -805,15 +801,18 @@ iron-selector yt-chip-cloud-chip-renderer,
   border-radius: 0 !important;
 }
 
+/* Each chip — proper button size */
 yt-chip-cloud-chip-renderer {
-  background: rgba(0, 0, 0, 0.75) !important;
-  border: none !important;
-  margin-right: 6px !important;
+  background: transparent !important;
+  border: 1px solid var(--ytr-border) !important;
+  margin: 0 !important;
   padding: 0 !important;
   overflow: visible !important;
   height: auto !important;
   min-height: 0 !important;
   display: inline-block !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
 
 /* Inner elements - reset height */
@@ -830,38 +829,47 @@ yt-chip-cloud-chip-renderer yt-touch-feedback-shape {
   display: none !important;
 }
 
-/* The actual chip text container - match channel labels exactly */
+/* Chip text — readable button size */
 yt-chip-cloud-chip-renderer .ytChipShapeChip {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
-  font-weight: 500 !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
-  padding: 3px 6px !important;
+  padding: 8px 14px !important;
   height: auto !important;
   min-height: 0 !important;
   line-height: 1 !important;
   display: inline-block !important;
-  color: rgba(255, 255, 255, 0.8) !important;
+  color: var(--ytr-text-dim) !important;
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
 }
 
+/* Hover — subtle fill */
 yt-chip-cloud-chip-renderer:hover {
-  background: rgba(0, 0, 0, 0.9) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--ytr-border-hover) !important;
 }
 
+yt-chip-cloud-chip-renderer:hover .ytChipShapeChip {
+  color: var(--ytr-text) !important;
+}
+
+/* Selected/active — white on dark, PB primary button style */
 yt-chip-cloud-chip-renderer[selected],
 yt-chip-cloud-chip-renderer[aria-selected="true"],
 yt-chip-cloud-chip-renderer.iron-selected {
-  background: #222 !important;
+  background: var(--ytr-text) !important;
+  border-color: var(--ytr-text) !important;
 }
 
-yt-chip-cloud-chip-renderer:hover .ytChipShapeChip,
 yt-chip-cloud-chip-renderer[selected] .ytChipShapeChip,
+yt-chip-cloud-chip-renderer[aria-selected="true"] .ytChipShapeChip,
 yt-chip-cloud-chip-renderer.iron-selected .ytChipShapeChip {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #000000 !important;
+  font-weight: 500 !important;
 }
 
 /* ============================================
@@ -880,51 +888,8 @@ ytd-video-renderer ytd-thumbnail::before {
   padding-top: 0 !important;
 }
 
-/* Search filter chips - same style as homepage */
-ytd-search-filter-group-renderer yt-chip-cloud-chip-renderer,
-ytd-search yt-chip-cloud-chip-renderer {
-  background: rgba(0, 0, 0, 0.75) !important;
-  border: none !important;
-  border-radius: 0 !important;
-  margin-right: 6px !important;
-  height: auto !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-}
-
-ytd-search yt-chip-cloud-chip-renderer[selected],
-ytd-search yt-chip-cloud-chip-renderer[aria-selected="true"] {
-  background: #222 !important;
-}
-
-ytd-search yt-chip-cloud-chip-renderer .ytChipShapeChip,
-ytd-search-filter-group-renderer .ytChipShapeChip {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
-  font-weight: 500 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  padding: 3px 6px !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  border-radius: 0 !important;
-  height: auto !important;
-  min-height: 0 !important;
-  line-height: 1 !important;
-  display: inline-block !important;
-}
-
-/* Hide touch feedback on search chips */
-ytd-search yt-chip-cloud-chip-renderer yt-touch-feedback-shape {
-  display: none !important;
-}
-
-/* Reset inner elements height */
-ytd-search yt-chip-cloud-chip-renderer div,
-ytd-search yt-chip-cloud-chip-renderer button {
-  height: auto !important;
-  min-height: 0 !important;
-  border-radius: 0 !important;
-}
+/* Search filter chips — inherit same button style as homepage */
+/* (already covered by global chip rules above) */
 
 /* Search results video thumbnails - grayscale */
 ytd-video-renderer img,
