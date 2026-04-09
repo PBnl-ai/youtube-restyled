@@ -322,6 +322,30 @@
   // FILTER CHIPS (ALL, MUSIC, PODCASTS, etc.) - Match channel label size
   // Works on homepage AND search results page
   // ============================================
+  // ============================================
+  // REORDER FILTER CHIPS — "New to you" first
+  // ============================================
+  function reorderFilterChips() {
+    const chipBars = document.querySelectorAll('iron-selector#chips, yt-chip-cloud-renderer #chips');
+    chipBars.forEach(bar => {
+      if (bar.dataset.ytrReordered) return;
+      const chips = Array.from(bar.querySelectorAll('yt-chip-cloud-chip-renderer'));
+      const newToYou = chips.find(chip => {
+        const text = chip.textContent.trim().toLowerCase();
+        return text === 'new to you' || text === 'nieuw voor jou';
+      });
+      if (newToYou && chips.indexOf(newToYou) > 1) {
+        // Insert after "All" (first chip)
+        const allChip = chips[0];
+        if (allChip) {
+          allChip.after(newToYou);
+        }
+        bar.dataset.ytrReordered = 'true';
+        console.log('[YTR] Moved "New to you" chip to second position');
+      }
+    });
+  }
+
   function styleFilterChips() {
     const chips = document.querySelectorAll('yt-chip-cloud-chip-renderer:not(.ytr-chip-styled), ytd-search-filter-group-renderer yt-chip-cloud-chip-renderer:not(.ytr-chip-styled)');
     chips.forEach(chip => {
@@ -463,6 +487,7 @@
       addChannelLabels();
       styleSidebarHeaders();
       styleFilterChips();
+      reorderFilterChips();
     }, CONFIG.observerDebounce);
   }
 
@@ -495,6 +520,7 @@
     addChannelLabels();
     styleSidebarHeaders();
     styleFilterChips();
+    reorderFilterChips();
 
     // Start observing for dynamic content
     startObserver();
