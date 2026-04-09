@@ -14,6 +14,7 @@
    -------------------------------------------- */
 :root {
   --ytr-bg: #050505;
+  --ytr-bg-content: #111111;
   --ytr-surface: #0a0a0a;
   --ytr-text: #ffffff;
   --ytr-text-dim: #a3a3a3;
@@ -40,6 +41,12 @@
 html, body, ytd-app, #content, ytd-browse, ytd-watch-flexy,
 ytd-page-manager, ytd-two-column-browse-results-renderer,
 ytd-rich-grid-renderer, #primary, #secondary {
+  background: var(--ytr-bg-content) !important;
+}
+
+/* Sidebar + header stay deep black */
+ytd-guide-renderer, #guide-content, ytd-mini-guide-renderer,
+tp-yt-app-drawer, #masthead-container, ytd-masthead {
   background: var(--ytr-bg) !important;
 }
 
@@ -137,13 +144,13 @@ ytd-rich-item-renderer {
   margin: 0 !important;
   padding: 8px !important;
   box-sizing: border-box !important;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 60%) !important;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 60%, transparent 100%) !important;
   border: 1px solid rgba(255,255,255,0.04) !important;
   transition: all 0.3s ease !important;
 }
 
 ytd-rich-item-renderer:hover {
-  background: linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 80%, transparent 100%) !important;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 80%, transparent 100%) !important;
   border-color: var(--ytr-border) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
