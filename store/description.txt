@@ -1,0 +1,53 @@
+# Chrome Web Store Listing
+
+## Extension Name
+YouTube Restyled - Cyberpunk Edition
+
+## Short Description (max 132 characters)
+Transform YouTube with a sleek cyberpunk aesthetic. Dark theme, grayscale thumbnails, terminal-style fonts, and no Shorts.
+
+## Detailed Description
+
+**YouTube Restyled reframes YouTube with a refined terminal-inspired interface, focused on clarity, rhythm and visual calm.
+
+### Features
+
+**Visual Overhaul**
+- Deep black background with subtle tech grid overlay
+- Grayscale thumbnails that reveal color on hover
+- Corner brackets on video thumbnails for that tech look
+- Monospace fonts for metadata and timestamps
+- Square corners throughout (no rounded elements)
+
+**Smart Channel Labels**
+- Channel names displayed directly on thumbnails
+- Terminal-style uppercase formatting
+- Quick identification of content sources
+
+**Clean Interface**
+- Compact sidebar with category labels
+- Minimal filter pills matching the overall aesthetic
+- Streamlined search bar with terminal styling
+- Subtle scanline effect for authentic CRT feel
+
+**Shorts Removal**
+- Automatically hides YouTube Shorts from your feed
+- Focus on regular, long-form content only
+
+**Watch Page Improvements**
+- Clean video player without visual effects
+- Styled action buttons and description box
+- Grayscale related video thumbnails
+
+### Perfect For
+- Developers and tech enthusiasts
+- Fans of cyberpunk aesthetics
+- Users who prefer dark, minimal interfaces
+- Anyone tired of YouTube's default look
+
+### Privacy
+This extension does not collect any personal data. It only modifies the visual appearance of YouTube pages locally in your browser.
+
+---
+
+**Note:** This extension is not affiliated with YouTube or Google. YouTube is a trademark of Google LLC.

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Restyled</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #050505;
+      color: #a3a3a3;
+      width: 320px;
+      min-height: 400px;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Header */
+    .header {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+    }
+
+    .logo svg {
+      fill: #FF0000;
+    }
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title {
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #525252;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    /* Status bar */
+    .status-bar {
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+
+    .status-dot.disabled {
+      background: #525252;
+      box-shadow: none;
+    }
+
+    /* Sections */
+    .section {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #525252;
+      margin-bottom: 12px;
+    }
+
+    /* Toggle Switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .toggle-label {
+      font-size: 12px;
+      color: #a3a3a3;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 36px;
+      height: 18px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 12px;
+      width: 12px;
+      left: 2px;
+      bottom: 2px;
+      background: #525252;
+      transition: 0.3s;
+    }
+
+    input:checked + .toggle-slider {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.5);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(18px);
+      background: #FF0000;
+    }
+
+    /* Slider input */
+    .slider-row {
+      padding: 8px 0;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .slider-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #FF0000;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      padding: 2px 6px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.1);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      background: #FF0000;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .version {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #525252;
+    }
+
+    .reset-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #525252;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      color: #FF0000;
+      border-color: rgba(255, 0, 0, 0.3);
+      background: rgba(255, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">
+        <path d="M21.582,5.193c-0.254-0.948-1.001-1.695-1.95-1.949C17.915,2.776,12,2.776,12,2.776s-5.915,0-7.632,0.468 C3.419,3.498,2.672,4.245,2.418,5.193C1.95,6.91,1.95,10.5,1.95,10.5s0,3.59,0.468,5.307c0.254,0.948,1.001,1.695,1.95,1.949 C6.085,18.224,12,18.224,12,18.224s5.915,0,7.632-0.468c0.949-0.254,1.696-1.001,1.95-1.949c0.468-1.717,0.468-5.307,0.468-5.307 S22.05,6.91,21.582,5.193z M9.75,14.025V6.975L15.75,10.5L9.75,14.025z"/>
+      </svg>
+    </div>
+    <div class="title-group">
+      <span class="title">YouTube Restyled</span>
+      <span class="subtitle">PB Edition</span>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="status-text">Extension Status</span>
+    <div class="status-indicator">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">ACTIVE</span>
+    </div>
+  </div>
+
+  <!-- Visual Effects -->
+  <div class="section">
+    <div class="section-title">01. Visual Effects</div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Tech Grid Background</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="techGrid" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Scanline Animation</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="scanline" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Vignette Overlay</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="vignette" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Corner Brackets</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="cornerBrackets" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Grayscale Thumbnails</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="grayscale" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="section">
+    <div class="section-title">02. Features</div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">NEW Video Badges</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="newBadges" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Hide Shorts</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="hideShorts" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Compact Layout</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="compactLayout" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-header">
+        <span class="toggle-label">New Video Threshold</span>
+        <span class="slider-value" id="thresholdValue">24H</span>
+      </div>
+      <input type="range" id="threshold" min="1" max="72" value="24">
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="version">V1.0.0 // PB_EDITION</span>
+    <button class="reset-btn" id="resetBtn">[ RESET ]</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
