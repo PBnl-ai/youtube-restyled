@@ -41,7 +41,11 @@
 html, body, ytd-app, #content, ytd-browse, ytd-watch-flexy,
 ytd-page-manager, ytd-two-column-browse-results-renderer,
 ytd-rich-grid-renderer, #primary, #secondary {
-  background: var(--ytr-bg-content) !important;
+  background:
+    linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px),
+    var(--ytr-bg-content) !important;
+  background-size: 48px 48px, 48px 48px, auto !important;
 }
 
 /* Sidebar + header stay deep black */
