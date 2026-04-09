@@ -14,12 +14,17 @@
    -------------------------------------------- */
 :root {
   --ytr-bg: #050505;
-  --ytr-text: #f1f1f1;
+  --ytr-surface: #0a0a0a;
+  --ytr-text: #ffffff;
   --ytr-text-dim: #a3a3a3;
   --ytr-text-muted: #525252;
-  --ytr-accent: #FF0000;
+  --ytr-text-faint: #666666;
+  --ytr-accent: #c9c4c0;
+  --ytr-yt-red: #FF0000;
   --ytr-border: rgba(255, 255, 255, 0.1);
   --ytr-border-hover: rgba(255, 255, 255, 0.25);
+  --ytr-notch: #444;
+  --ytr-notch-hover: #999;
 }
 
 /* --------------------------------------------
@@ -225,10 +230,10 @@ ytd-rich-item-renderer:hover .ytr-channel-label {
   position: absolute !important;
   width: 6px !important;
   height: 6px !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
+  border-color: var(--ytr-notch) !important;
   border-style: solid !important;
   border-width: 0 !important;
-  transition: all 0.3s ease !important;
+  transition: border-color 0.3s ease, width 0.3s ease, height 0.3s ease !important;
   pointer-events: none !important;
   z-index: 10 !important;
 }
@@ -238,9 +243,9 @@ ytd-rich-item-renderer:hover .ytr-channel-label {
 .ytr-corner-bl { bottom: 0; left: 0; border-bottom-width: 1px !important; border-left-width: 1px !important; }
 .ytr-corner-br { bottom: 0; right: 0; border-bottom-width: 1px !important; border-right-width: 1px !important; }
 
-/* Red corners on hover */
+/* Notch corners on hover — PB style warm grey */
 ytd-rich-item-renderer:hover .ytr-corner {
-  border-color: var(--ytr-accent) !important;
+  border-color: var(--ytr-notch-hover) !important;
   width: 10px !important;
   height: 10px !important;
 }
@@ -328,7 +333,7 @@ ytd-rich-grid-media #video-title-link {
 }
 
 ytd-rich-item-renderer:hover #video-title {
-  color: var(--ytr-accent) !important;
+  color: var(--ytr-text) !important;
 }
 
 /* Channel name - monospace */
@@ -686,14 +691,14 @@ ytd-guide-entry-renderer:hover .title {
 }
 
 ytd-guide-entry-renderer:hover yt-icon {
-  color: var(--ytr-accent) !important;
+  color: var(--ytr-text-dim) !important;
 }
 
 /* Active sidebar item - red left border */
 ytd-guide-entry-renderer[active] #endpoint {
   background: rgba(255, 255, 255, 0.05) !important;
   border-color: var(--ytr-border) !important;
-  border-left: 2px solid var(--ytr-accent) !important;
+  border-left: 2px solid var(--ytr-text-dim) !important;
 }
 
 ytd-guide-entry-renderer[active] .title {
@@ -718,7 +723,7 @@ ytd-guide-entry-renderer yt-img-shadow img {
 
 /* New notification dot on subscriptions */
 ytd-guide-entry-renderer .guide-entry-badge {
-  background: var(--ytr-accent) !important;
+  background: var(--ytr-yt-red) !important;
   width: 4px !important;
   height: 4px !important;
 }
@@ -952,7 +957,7 @@ ytd-video-renderer #video-title {
 }
 
 ytd-video-renderer:hover #video-title {
-  color: var(--ytr-accent) !important;
+  color: var(--ytr-text) !important;
 }
 
 /* Search results metadata */
@@ -1189,15 +1194,21 @@ ytd-watch-flexy #owner {
   border-bottom: 1px solid var(--ytr-border) !important;
 }
 
-/* Subscribe button */
+/* Subscribe button — white on dark, PB style */
 ytd-watch-flexy #subscribe-button button,
 ytd-watch-flexy ytd-subscribe-button-renderer button {
-  background: var(--ytr-accent) !important;
+  background: var(--ytr-text) !important;
+  color: #000000 !important;
   border: none !important;
   font-family: 'JetBrains Mono', monospace !important;
   text-transform: uppercase !important;
   font-size: 10px !important;
   letter-spacing: 0.05em !important;
+}
+
+ytd-watch-flexy #subscribe-button button:hover,
+ytd-watch-flexy ytd-subscribe-button-renderer button:hover {
+  opacity: 0.9 !important;
 }
 
 /* Description box */
@@ -1267,4 +1278,85 @@ ytd-miniplayer #player-container {
 ytd-miniplayer .info-bar,
 ytd-miniplayer #info-bar {
   background: #212121 !important;
+}
+
+/* ============================================
+   NEW VIDEO BADGE — PB style (white, not red)
+   ============================================ */
+
+.ytr-new-badge {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: var(--ytr-text) !important;
+  color: #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  padding: 2px 6px !important;
+  z-index: 6 !important;
+  pointer-events: none !important;
+}
+
+/* Subtle pulse on NEW badge */
+.ytr-new-badge::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -1px !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  animation: ytr-badge-pulse 2.8s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes ytr-badge-pulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ============================================
+   TEXT SELECTION — PB style
+   ============================================ */
+
+::selection {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+/* ============================================
+   GLOBAL PB REFINEMENTS
+   ============================================ */
+
+/* All dialogs, menus, dropdowns — dark surface */
+ytd-popup-container,
+ytd-menu-popup-renderer,
+tp-yt-paper-dialog,
+tp-yt-paper-listbox,
+ytd-multi-page-menu-renderer {
+  background: var(--ytr-surface) !important;
+  border: 1px solid var(--ytr-border) !important;
+}
+
+/* Menu items */
+ytd-menu-service-item-renderer,
+tp-yt-paper-item {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+}
+
+ytd-menu-service-item-renderer:hover,
+tp-yt-paper-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Tooltips — PB mono style */
+tp-yt-paper-tooltip,
+.ytp-tooltip-text {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  background: var(--ytr-surface) !important;
+  border: 1px solid var(--ytr-border) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
 }
