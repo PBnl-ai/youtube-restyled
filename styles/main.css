@@ -168,8 +168,25 @@ ytd-rich-item-renderer .ytd-rich-grid-media {
 
 ytd-rich-item-renderer:hover {
   background: #000000 !important;
-  border-color: var(--ytr-border) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Kill YouTube's own hover backgrounds */
+ytd-rich-item-renderer:hover #dismissible,
+ytd-rich-item-renderer:hover #content,
+ytd-rich-item-renderer:hover ytd-rich-grid-media,
+ytd-rich-item-renderer:hover #details,
+ytd-rich-item-renderer:hover #meta {
+  background: #000000 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+ytd-rich-item-renderer #dismissible {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Responsive: 3 columns on smaller screens */
