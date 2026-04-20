@@ -210,35 +210,16 @@ ytd-rich-item-renderer #dismissible {
    THUMBNAILS - GRAYSCALE + BORDER
    ============================================ */
 
-/* Thumbnail container styling */
-ytd-thumbnail,
-a#thumbnail {
-  position: relative !important;
+/* Thumbnail container — ONLY border, no layout overrides */
+ytd-thumbnail {
   border: 1px solid var(--ytr-border) !important;
-  overflow: hidden !important;
-  display: block !important;
 }
 
-/* yt-thumbnail-view-model — only add border, don't override display/overflow
-   YouTube's newer component may depend on its default layout */
 yt-thumbnail-view-model {
-  position: relative !important;
   border: 1px solid var(--ytr-border) !important;
 }
 
-/* Ensure thumbnail images are visible and properly sized */
-ytd-thumbnail img,
-yt-thumbnail-view-model img,
-yt-image img {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  object-fit: cover !important;
-}
-
-/* GRAYSCALE on all thumbnail images */
-ytd-rich-item-renderer img,
-ytd-grid-video-renderer img,
+/* GRAYSCALE on thumbnail images */
 ytd-thumbnail img,
 yt-thumbnail-view-model img,
 yt-image img,
@@ -249,6 +230,7 @@ ytd-playlist-thumbnail img {
 
 /* COLOR on hover */
 ytd-rich-item-renderer:hover img,
+ytd-grid-video-renderer:hover img,
 ytd-rich-item-renderer:hover yt-image img {
   filter: grayscale(0%) brightness(1) !important;
   transform: scale(1.02) !important;
@@ -256,7 +238,8 @@ ytd-rich-item-renderer:hover yt-image img {
 
 /* Thumbnail border glow on hover */
 ytd-rich-item-renderer:hover ytd-thumbnail,
-ytd-rich-item-renderer:hover yt-thumbnail-view-model {
+ytd-rich-item-renderer:hover yt-thumbnail-view-model,
+ytd-grid-video-renderer:hover ytd-thumbnail {
   border-color: var(--ytr-border-hover) !important;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.05) !important;
 }

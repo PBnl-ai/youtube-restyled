@@ -50,15 +50,28 @@
     // Skip if already has corners
     if (element.querySelector('.ytr-corner')) return;
 
-    // Make sure element has position relative for absolute corners
-    element.style.position = 'relative';
+    // Don't modify the thumbnail element directly — wrap corners in a
+    // positioned overlay so we don't break YouTube's internal layout
+    const overlay = document.createElement('div');
+    overlay.className = 'ytr-corner-overlay';
+    overlay.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:10;';
 
     const corners = ['tl', 'tr', 'bl', 'br'];
     corners.forEach(pos => {
       const corner = document.createElement('div');
       corner.className = `ytr-corner ytr-corner-${pos}`;
-      element.appendChild(corner);
+      overlay.appendChild(corner);
     });
+
+    // Append to parent (the card) instead of the thumbnail itself
+    const card = element.closest('ytd-rich-item-renderer, ytd-grid-video-renderer, ytd-video-renderer');
+    if (card) {
+      card.style.position = 'relative';
+      card.appendChild(overlay);
+    } else {
+      element.style.position = 'relative';
+      element.appendChild(overlay);
+    }
   }
 
   // ============================================
@@ -77,17 +90,16 @@
       const channelName = channelEl.textContent.trim().toUpperCase();
       if (!channelName) return;
 
-      // Find thumbnail container
+      // Find thumbnail container — don't modify it directly
       const thumbnail = item.querySelector('ytd-thumbnail, yt-thumbnail-view-model');
-      if (!thumbnail || thumbnail.querySelector('.ytr-channel-label')) return;
+      if (!thumbnail || item.querySelector('.ytr-channel-label')) return;
 
-      thumbnail.style.position = 'relative';
-
-      // Create label
+      // Append label to the card item instead of inside the thumbnail
       const label = document.createElement('div');
       label.className = 'ytr-channel-label';
       label.textContent = channelName;
-      thumbnail.appendChild(label);
+      item.style.position = 'relative';
+      item.appendChild(label);
     });
   }
 
