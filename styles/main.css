@@ -212,7 +212,6 @@ ytd-rich-item-renderer #dismissible {
 
 /* Thumbnail container styling */
 ytd-thumbnail,
-yt-thumbnail-view-model,
 a#thumbnail {
   position: relative !important;
   border: 1px solid var(--ytr-border) !important;
@@ -220,8 +219,26 @@ a#thumbnail {
   display: block !important;
 }
 
+/* yt-thumbnail-view-model — only add border, don't override display/overflow
+   YouTube's newer component may depend on its default layout */
+yt-thumbnail-view-model {
+  position: relative !important;
+  border: 1px solid var(--ytr-border) !important;
+}
+
+/* Ensure thumbnail images are visible and properly sized */
+ytd-thumbnail img,
+yt-thumbnail-view-model img,
+yt-image img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  object-fit: cover !important;
+}
+
 /* GRAYSCALE on all thumbnail images */
 ytd-rich-item-renderer img,
+ytd-grid-video-renderer img,
 ytd-thumbnail img,
 yt-thumbnail-view-model img,
 yt-image img,
@@ -933,10 +950,7 @@ ytd-search {
   background: var(--ytr-bg) !important;
 }
 
-/* Fix the black box above thumbnails in search results */
-ytd-video-renderer ytd-thumbnail::before {
-  padding-top: 56.25% !important; /* force 16:9 */
-}
+/* Don't touch search thumbnail ::before — YouTube needs it for aspect ratio */
 
 /* Search filter chips — inherit same button style as homepage */
 /* (already covered by global chip rules above) */
@@ -1066,12 +1080,7 @@ ytd-search #container {
    ============================================ */
 
 /* Channel page grid uses ytd-grid-video-renderer or ytd-rich-item-renderer */
-/* Constrain the ::before aspect ratio spacer — don't remove it or images collapse */
-ytd-browse[page-subtype="channels"] ytd-thumbnail::before,
-ytd-grid-video-renderer ytd-thumbnail::before,
-ytd-rich-item-renderer ytd-thumbnail::before {
-  padding-top: 56.25% !important; /* force 16:9 */
-}
+/* Don't touch ::before — YouTube needs it for aspect ratio spacer */
 
 /* Channel grid items - proper sizing */
 ytd-grid-video-renderer {
