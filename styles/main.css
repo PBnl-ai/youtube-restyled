@@ -934,10 +934,8 @@ ytd-search {
 }
 
 /* Fix the black box above thumbnails in search results */
-/* YouTube uses ::before with padding-top for aspect ratio - remove it */
 ytd-video-renderer ytd-thumbnail::before {
-  display: none !important;
-  padding-top: 0 !important;
+  padding-top: 56.25% !important; /* force 16:9 */
 }
 
 /* Search filter chips — inherit same button style as homepage */
@@ -1068,15 +1066,11 @@ ytd-search #container {
    ============================================ */
 
 /* Channel page grid uses ytd-grid-video-renderer or ytd-rich-item-renderer */
-/* Fix the ::before padding-top aspect ratio placeholder that creates blank space */
+/* Constrain the ::before aspect ratio spacer — don't remove it or images collapse */
 ytd-browse[page-subtype="channels"] ytd-thumbnail::before,
-ytd-browse[page-subtype="channels"] yt-thumbnail-view-model::before,
 ytd-grid-video-renderer ytd-thumbnail::before,
-ytd-grid-video-renderer yt-thumbnail-view-model::before,
-ytd-rich-item-renderer ytd-thumbnail::before,
-ytd-rich-item-renderer yt-thumbnail-view-model::before {
-  display: none !important;
-  padding-top: 0 !important;
+ytd-rich-item-renderer ytd-thumbnail::before {
+  padding-top: 56.25% !important; /* force 16:9 */
 }
 
 /* Channel grid items - proper sizing */
