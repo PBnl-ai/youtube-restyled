@@ -1,48 +1,1338 @@
 /* ============================================
    YOUTUBE RESTYLED - PB Edition
-   Minimal working version — full styling TBD
+   Cyberpunk/Terminal Aesthetic
+   AGGRESSIVE OVERRIDES VERSION
    ============================================ */
 
+/* --------------------------------------------
+   FONTS
+   -------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
+/* --------------------------------------------
+   CSS VARIABLES
+   -------------------------------------------- */
 :root {
   --ytr-bg: #050505;
-  --ytr-bg-content: #111111;
   --ytr-surface: #0a0a0a;
   --ytr-text: #ffffff;
   --ytr-text-dim: #a3a3a3;
   --ytr-text-muted: #525252;
+  --ytr-text-faint: #666666;
+  --ytr-accent: #c9c4c0;
+  --ytr-yt-red: #FF0000;
   --ytr-border: rgba(255, 255, 255, 0.1);
   --ytr-border-hover: rgba(255, 255, 255, 0.25);
+  --ytr-notch: #444;
+  --ytr-notch-hover: #999;
 }
 
-/* Dark backgrounds */
-html, body, ytd-app, ytd-browse, ytd-watch-flexy,
+/* --------------------------------------------
+   GLOBAL: KILL ALL BORDER RADIUS
+   -------------------------------------------- */
+*, *::before, *::after {
+  border-radius: 0 !important;
+}
+
+/* --------------------------------------------
+   DARK BACKGROUND EVERYWHERE
+   -------------------------------------------- */
+html, body, ytd-app, #content, ytd-browse, ytd-watch-flexy,
 ytd-page-manager, ytd-two-column-browse-results-renderer,
 ytd-rich-grid-renderer, #primary, #secondary {
-  background: var(--ytr-bg-content) !important;
-}
-
-ytd-guide-renderer, #guide-content, ytd-mini-guide-renderer,
-tp-yt-app-drawer, #masthead-container, ytd-masthead {
   background: var(--ytr-bg) !important;
 }
 
-/* Grayscale thumbnails */
-ytd-thumbnail img,
-yt-thumbnail-view-model img {
-  filter: grayscale(60%) brightness(0.8) !important;
-  transition: filter 0.35s ease !important;
+/* ============================================
+   GRID LAYOUT - FORCE 4 COLUMNS
+   ============================================ */
+
+/* Main content area - spacing from sidebar AND right */
+ytd-browse[page-subtype="home"],
+ytd-browse[page-subtype="subscriptions"],
+#primary.ytd-browse {
+  padding: 0 32px 0 32px !important;
 }
 
+/* Make the grid a flexbox that wraps */
+#contents.ytd-rich-grid-renderer {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  padding: 20px 24px 32px 16px !important;
+  gap: 28px 20px !important;  /* vertical 28px, horizontal 20px */
+  margin: 0 !important;
+}
+
+/* Rich grid renderer container */
+ytd-rich-grid-renderer {
+  padding: 8px 16px 0 16px !important;
+  margin: 0 !important;
+}
+
+/* Extra spacing on the browse page container */
+ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+ytd-two-column-browse-results-renderer {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  margin-left: 0 !important;
+}
+
+/* Flatten YouTube's row structure */
+ytd-rich-grid-row,
+ytd-rich-grid-row #contents {
+  display: contents !important;
+}
+
+/* ============================================
+   SHELF SECTIONS (Breaking News, etc.)
+   Keep as horizontal scrollable row, don't flatten into grid
+   ============================================ */
+
+/* Section renderers (non-shorts) should span full width */
+ytd-rich-section-renderer:not([is-shorts-grid]):not(:has([is-shorts])):not(:has(ytd-reel-shelf-renderer)) {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* The shelf inside a section: horizontal scrollable row */
+ytd-rich-section-renderer ytd-rich-shelf-renderer:not([is-shorts]) {
+  display: block !important;
+  width: 100% !important;
+}
+
+ytd-rich-section-renderer ytd-rich-shelf-renderer:not([is-shorts]) #contents {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 16px !important;
+  padding: 0 0 12px 0 !important;
+  scrollbar-width: thin !important;
+}
+
+ytd-rich-section-renderer ytd-rich-shelf-renderer:not([is-shorts]) #contents > * {
+  flex: 0 0 300px !important;
+  max-width: 300px !important;
+  min-width: 280px !important;
+}
+
+/* Section title (e.g. "Breaking news") */
+ytd-rich-section-renderer #title-text,
+ytd-rich-section-renderer .ytd-rich-shelf-renderer #title-text,
+ytd-rich-section-renderer h2 {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: var(--ytr-text) !important;
+  margin-bottom: 12px !important;
+}
+
+/* Each video card - calculate width for 4 columns */
+/* With gap 20px horizontal: 3 gaps = 60px, so each card = (100% - 60px) / 4 */
+ytd-rich-item-renderer {
+  flex: 0 0 calc(25% - 15px) !important;
+  max-width: calc(25% - 15px) !important;
+  width: calc(25% - 15px) !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 60%) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+  transition: all 0.3s ease !important;
+}
+
+ytd-rich-item-renderer:hover {
+  background: linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 80%, transparent 100%) !important;
+  border-color: var(--ytr-border) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Responsive: 3 columns on smaller screens */
+@media (max-width: 1400px) {
+  ytd-rich-item-renderer {
+    flex: 0 0 calc(33.333% - 16px) !important;
+    max-width: calc(33.333% - 16px) !important;
+    width: calc(33.333% - 16px) !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  ytd-rich-item-renderer {
+    flex: 0 0 calc(50% - 16px) !important;
+    max-width: calc(50% - 16px) !important;
+    width: calc(50% - 16px) !important;
+  }
+}
+
+/* ============================================
+   THUMBNAILS - GRAYSCALE + BORDER
+   ============================================ */
+
+/* Thumbnail container styling */
+ytd-thumbnail,
+yt-thumbnail-view-model,
+a#thumbnail {
+  position: relative !important;
+  border: 1px solid var(--ytr-border) !important;
+  overflow: hidden !important;
+  display: block !important;
+}
+
+/* GRAYSCALE on all thumbnail images */
+ytd-rich-item-renderer img,
+ytd-thumbnail img,
+yt-thumbnail-view-model img,
+yt-image img,
+ytd-playlist-thumbnail img {
+  filter: grayscale(60%) brightness(0.8) !important;
+  transition: all 0.35s ease !important;
+}
+
+/* COLOR on hover */
 ytd-rich-item-renderer:hover img,
-ytd-grid-video-renderer:hover img {
+ytd-rich-item-renderer:hover yt-image img {
+  filter: grayscale(0%) brightness(1) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Thumbnail border glow on hover */
+ytd-rich-item-renderer:hover ytd-thumbnail,
+ytd-rich-item-renderer:hover yt-thumbnail-view-model {
+  border-color: var(--ytr-border-hover) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ============================================
+   CHANNEL LABELS ON THUMBNAILS (pb.nl style)
+   ============================================ */
+
+.ytr-channel-label {
+  position: absolute !important;
+  top: 8px !important;
+  left: 8px !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 3px 6px !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+  max-width: 60% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+
+ytd-rich-item-renderer:hover .ytr-channel-label {
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* ============================================
+   CORNER BRACKETS (injected by JS)
+   ============================================ */
+
+.ytr-corner {
+  position: absolute !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-color: var(--ytr-notch) !important;
+  border-style: solid !important;
+  border-width: 0 !important;
+  transition: border-color 0.3s ease, width 0.3s ease, height 0.3s ease !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.ytr-corner-tl { top: 0; left: 0; border-top-width: 1px !important; border-left-width: 1px !important; }
+.ytr-corner-tr { top: 0; right: 0; border-top-width: 1px !important; border-right-width: 1px !important; }
+.ytr-corner-bl { bottom: 0; left: 0; border-bottom-width: 1px !important; border-left-width: 1px !important; }
+.ytr-corner-br { bottom: 0; right: 0; border-bottom-width: 1px !important; border-right-width: 1px !important; }
+
+/* Notch corners on hover — PB style warm grey */
+ytd-rich-item-renderer:hover .ytr-corner {
+  border-color: var(--ytr-notch-hover) !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* ============================================
+   BACKGROUND OVERLAYS (injected by JS)
+   Disable on video watch page to not cover video
+   ============================================ */
+
+.ytr-tech-grid {
+  position: fixed !important;
+  top: 0; left: 0; right: 0; bottom: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background-size: 40px 40px !important;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px) !important;
+}
+
+.ytr-vignette {
+  position: fixed !important;
+  top: 0; left: 0; right: 0; bottom: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(0,0,0,0.1) 100%) !important;
+}
+
+.ytr-scanline {
+  position: fixed !important;
+  top: 0; left: 0; right: 0 !important;
+  height: 200vh !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 4px,
+    rgba(255, 255, 255, 0.004) 4px,
+    rgba(255, 255, 255, 0.004) 8px
+  ) !important;
+  animation: ytr-scan 15s linear infinite !important;
+}
+
+@keyframes ytr-scan {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+
+/* Hide overlays on video watch page completely */
+ytd-watch-flexy .ytr-tech-grid,
+ytd-watch-flexy .ytr-vignette,
+ytd-watch-flexy .ytr-scanline {
+  display: none !important;
+}
+
+/* ============================================
+   DURATION BADGE - MONOSPACE STYLE
+   ============================================ */
+
+ytd-thumbnail-overlay-time-status-renderer,
+ytd-thumbnail-overlay-time-status-renderer #text {
+  background: rgba(0, 0, 0, 0.85) !important;
+  border: 1px solid var(--ytr-border) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.05em !important;
+  padding: 2px 6px !important;
+}
+
+/* ============================================
+   VIDEO TITLES & METADATA
+   ============================================ */
+
+/* Video title */
+#video-title,
+h3.ytd-rich-grid-media,
+ytd-rich-grid-media #video-title-link {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--ytr-text) !important;
+  line-height: 1.4 !important;
+  transition: color 0.2s !important;
+}
+
+ytd-rich-item-renderer:hover #video-title {
+  color: var(--ytr-text) !important;
+}
+
+/* Channel name - monospace */
+#channel-name,
+ytd-channel-name,
+#byline-container {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  color: var(--ytr-text-muted) !important;
+}
+
+/* Metadata (views, time) */
+#metadata-line,
+#metadata-line span,
+.ytd-video-meta-block {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  color: var(--ytr-text-muted) !important;
+}
+
+/* ============================================
+   HEADER - Terminal Style
+   ============================================ */
+
+#masthead-container,
+ytd-masthead {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-bottom: 1px solid var(--ytr-border) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Logo - keep YouTube icon, add PB Premium text */
+ytd-topbar-logo-renderer ytd-logo {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Don't modify the original SVG */
+
+/* Logo area - keep NL country code small */
+ytd-masthead #logo #country-code {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.05em !important;
+  color: var(--ytr-text-muted) !important;
+  vertical-align: super !important;
+}
+
+/* Custom PB Premium text */
+.ytr-logo-text {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  color: white !important;
+  letter-spacing: -0.01em !important;
+  margin-left: 4px !important;
+}
+
+/* ============================================
+   SEARCH BAR - FULLY SQUARE TERMINAL STYLE
+   ============================================ */
+
+/* Main search container - single border only on outer element */
+ytd-searchbox {
+  --ytd-searchbox-border-radius: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.ytSearchboxComponentHost,
+ytd-searchbox * {
+  border: none !important;
+}
+
+ytd-searchbox #container {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Search input */
+ytd-searchbox input,
+#search-input,
+input#search {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  padding-left: 12px !important;
+  background: transparent !important;
+  color: var(--ytr-text) !important;
+  border: none !important;
+}
+
+ytd-searchbox input::placeholder {
+  color: var(--ytr-text-muted) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+}
+
+ytd-searchbox:focus-within {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Search button - integrated into search bar */
+#search-icon-legacy,
+button#search-icon-legacy,
+ytd-searchbox #search-icon-legacy,
+ytd-searchbox button,
+[aria-label="Search"],
+.ytSearchboxComponentSearchButton {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: none !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin-left: 0 !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
+}
+
+#search-icon-legacy:hover,
+button#search-icon-legacy:hover,
+ytd-searchbox button:hover,
+[aria-label="Search"]:hover,
+.ytSearchboxComponentSearchButton:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Voice search button - subtle */
+#voice-search-button {
+  border: none !important;
+  margin-left: 6px !important;
+  background: transparent !important;
+  opacity: 0.5 !important;
+  transition: opacity 0.2s ease !important;
+}
+
+#voice-search-button:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  opacity: 1 !important;
+}
+
+/* Remove borders from inner elements */
+#voice-search-button *,
+#voice-search-button button {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Header right buttons - SUBTLE, minimal style */
+ytd-masthead #end #buttons {
+  gap: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Button containers - no borders, very subtle */
+ytd-masthead yt-icon-button,
+ytd-masthead ytd-topbar-menu-button-renderer,
+ytd-masthead ytd-notification-topbar-button-renderer {
+  border: none !important;
+  background: transparent !important;
+  opacity: 0.6 !important;
+  transition: opacity 0.2s ease !important;
+}
+
+ytd-masthead yt-icon-button:hover,
+ytd-masthead ytd-topbar-menu-button-renderer:hover,
+ytd-masthead ytd-notification-topbar-button-renderer:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  opacity: 1 !important;
+}
+
+/* Remove borders from inner button elements */
+ytd-masthead yt-icon-button button,
+ytd-masthead yt-icon-button *,
+ytd-masthead ytd-topbar-menu-button-renderer button,
+ytd-masthead ytd-topbar-menu-button-renderer *,
+ytd-masthead ytd-notification-topbar-button-renderer button,
+ytd-masthead ytd-notification-topbar-button-renderer * {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Avatar - subtle, no border */
+#avatar-btn {
+  border: none !important;
+  opacity: 0.8 !important;
+}
+
+#avatar-btn:hover {
+  opacity: 1 !important;
+}
+
+#avatar-btn img,
+.yt-spec-avatar-shape img {
+  border: none !important;
+}
+
+/* Create button - simple border */
+ytd-masthead ytd-button-renderer,
+ytd-masthead [aria-label="Create"],
+ytd-masthead ytd-topbar-menu-button-renderer:has([aria-label="Create"]) {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.2s ease !important;
+}
+
+ytd-masthead ytd-button-renderer:hover,
+ytd-masthead [aria-label="Create"]:hover,
+ytd-masthead ytd-topbar-menu-button-renderer:has([aria-label="Create"]):hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Create button text - darker, smaller + icon */
+ytd-masthead ytd-button-renderer yt-formatted-string,
+ytd-masthead ytd-button-renderer span,
+ytd-masthead [aria-label="Create"] span {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Make the + icon smaller (40% smaller than default) */
+ytd-masthead ytd-button-renderer yt-icon,
+ytd-masthead [aria-label="Create"] yt-icon {
+  width: 10px !important;
+  height: 10px !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+
+/* ============================================
+   SIDEBAR - COMPACT Terminal Style
+   ============================================ */
+
+/* Sidebar width - like design (260px) */
+ytd-guide-renderer,
+#guide-content,
+app-drawer[opened] {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+}
+
+ytd-guide-renderer,
+#guide-content,
+ytd-mini-guide-renderer,
+tp-yt-app-drawer {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-right: 1px solid var(--ytr-border) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Sidebar section headers - same style as channel labels */
+/* For EXPLORE, MORE FROM YOUTUBE (ytd-guide-section-renderer) */
+ytd-guide-section-renderer h3 yt-formatted-string#guide-section-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: #222 !important;
+  padding: 3px 6px !important;
+  margin: 0 !important;
+  display: inline-block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* Container for section headers */
+ytd-guide-section-renderer h3 {
+  padding: 8px 0 4px 12px !important;
+  margin: 0 !important;
+}
+
+/* For SUBSCRIPTIONS, YOU (ytd-guide-collapsible-section-entry-renderer) */
+ytd-guide-collapsible-section-entry-renderer #header-entry yt-formatted-string.title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: #222 !important;
+  padding: 3px 6px !important;
+  display: inline-block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* Adjust the container for SUBSCRIPTIONS/YOU headers */
+ytd-guide-collapsible-section-entry-renderer #header-entry #endpoint {
+  padding-left: 12px !important;
+  height: auto !important;
+  min-height: 35px !important;
+}
+
+/* Sidebar items - VERY tight vertical spacing like original */
+ytd-guide-entry-renderer {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+ytd-guide-entry-renderer #endpoint {
+  padding: 0 12px !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  border: none !important;
+  border-left: 2px solid transparent !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+}
+
+ytd-guide-entry-renderer a,
+ytd-guide-entry-renderer tp-yt-paper-item {
+  min-height: 0 !important;
+  padding: 0 !important;
+  height: 35px !important;
+}
+
+/* Sidebar item text - readable size */
+ytd-guide-entry-renderer .title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  color: var(--ytr-text-dim) !important;
+}
+
+ytd-guide-entry-renderer:hover #endpoint {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--ytr-border) !important;
+}
+
+ytd-guide-entry-renderer:hover .title {
+  color: var(--ytr-text) !important;
+}
+
+ytd-guide-entry-renderer:hover yt-icon {
+  color: var(--ytr-text-dim) !important;
+}
+
+/* Active sidebar item - red left border */
+ytd-guide-entry-renderer[active] #endpoint {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--ytr-border) !important;
+  border-left: 2px solid var(--ytr-text-dim) !important;
+}
+
+ytd-guide-entry-renderer[active] .title {
+  color: var(--ytr-text) !important;
+}
+
+/* Sidebar icons */
+ytd-guide-entry-renderer yt-icon {
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--ytr-text-muted) !important;
+  transition: color 0.2s ease !important;
+}
+
+/* Subscription items with avatars */
+ytd-guide-entry-renderer yt-img-shadow,
+ytd-guide-entry-renderer yt-img-shadow img {
+  width: 22px !important;
+  height: 22px !important;
+  border: 1px solid var(--ytr-border) !important;
+}
+
+/* New notification dot on subscriptions */
+ytd-guide-entry-renderer .guide-entry-badge {
+  background: var(--ytr-yt-red) !important;
+  width: 4px !important;
+  height: 4px !important;
+}
+
+/* Hide "SHOW MORE" expand buttons */
+#expander-item.ytd-guide-section-renderer {
+  display: none !important;
+}
+
+/* Sidebar sections - minimal spacing */
+ytd-guide-section-renderer {
+  margin: 0 !important;
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+ytd-guide-section-renderer #items {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Force compact on all guide elements */
+ytd-guide-renderer #sections,
+ytd-guide-renderer #guide-content,
+#guide-inner-content {
+  padding: 0 !important;
+}
+
+ytd-guide-collapsible-section-entry-renderer,
+ytd-guide-downloads-entry-renderer {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+ytd-guide-collapsible-section-entry-renderer #endpoint,
+ytd-guide-downloads-entry-renderer #endpoint {
+  padding: 0 12px !important;
+  height: 35px !important;
+  min-height: 35px !important;
+}
+
+/* ============================================
+   FILTER CHIPS - Subtle, minimal style
+   ============================================ */
+
+/* Chip bar container */
+ytd-feed-filter-chip-bar-renderer {
+  height: auto !important;
+  min-height: auto !important;
+  padding: 12px 0 12px 24px !important;
+  margin-left: 16px !important;
+  border-bottom: 1px solid var(--ytr-border) !important;
+}
+
+ytd-feed-filter-chip-bar-renderer iron-selector,
+ytd-feed-filter-chip-bar-renderer #chips-wrapper,
+ytd-feed-filter-chip-bar-renderer > div {
+  height: auto !important;
+  min-height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Force ALL chip elements to be square */
+yt-chip-cloud-chip-renderer,
+yt-chip-cloud-chip-renderer *,
+.ytChipShapeChip,
+.yt-spec-button-shape-next,
+yt-chip-cloud-chip-renderer div,
+yt-chip-cloud-chip-renderer span,
+yt-chip-cloud-chip-renderer a,
+iron-selector yt-chip-cloud-chip-renderer,
+#chips yt-chip-cloud-chip-renderer {
+  border-radius: 0 !important;
+}
+
+/* Each chip — proper button size */
+yt-chip-cloud-chip-renderer {
+  background: transparent !important;
+  border: 1px solid var(--ytr-border) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Inner elements - reset height */
+yt-chip-cloud-chip-renderer div,
+yt-chip-cloud-chip-renderer button,
+yt-chip-cloud-chip-renderer chip-shape {
+  height: auto !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Hide touch feedback */
+yt-chip-cloud-chip-renderer yt-touch-feedback-shape {
+  display: none !important;
+}
+
+/* Chip text — readable button size */
+yt-chip-cloud-chip-renderer .ytChipShapeChip {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 8px 14px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  color: var(--ytr-text-dim) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Hover — subtle fill */
+yt-chip-cloud-chip-renderer:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--ytr-border-hover) !important;
+}
+
+yt-chip-cloud-chip-renderer:hover .ytChipShapeChip {
+  color: var(--ytr-text) !important;
+}
+
+/* Selected/active — white on dark, PB primary button style */
+yt-chip-cloud-chip-renderer[selected],
+yt-chip-cloud-chip-renderer[aria-selected="true"],
+yt-chip-cloud-chip-renderer.iron-selected {
+  background: var(--ytr-text) !important;
+  border-color: var(--ytr-text) !important;
+}
+
+yt-chip-cloud-chip-renderer[selected] .ytChipShapeChip,
+yt-chip-cloud-chip-renderer[aria-selected="true"] .ytChipShapeChip,
+yt-chip-cloud-chip-renderer.iron-selected .ytChipShapeChip {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================
+   SEARCH RESULTS PAGE
+   ============================================ */
+
+/* Search results container */
+ytd-search {
+  background: var(--ytr-bg) !important;
+}
+
+/* Fix the black box above thumbnails in search results */
+/* YouTube uses ::before with padding-top for aspect ratio - remove it */
+ytd-video-renderer ytd-thumbnail::before {
+  display: none !important;
+  padding-top: 0 !important;
+}
+
+/* Search filter chips — inherit same button style as homepage */
+/* (already covered by global chip rules above) */
+
+/* Search results video thumbnails - grayscale */
+ytd-video-renderer img,
+ytd-video-renderer ytd-thumbnail img {
+  filter: grayscale(60%) brightness(0.8) !important;
+  transition: all 0.35s ease !important;
+}
+
+ytd-video-renderer:hover img,
+ytd-video-renderer:hover ytd-thumbnail img {
   filter: grayscale(0%) brightness(1) !important;
 }
 
-/* Hide shorts */
+/* Search results thumbnail border */
+ytd-video-renderer ytd-thumbnail {
+  border: 1px solid var(--ytr-border) !important;
+  overflow: hidden !important;
+}
+
+ytd-video-renderer:hover ytd-thumbnail {
+  border-color: var(--ytr-border-hover) !important;
+}
+
+/* Search results video title */
+ytd-video-renderer #video-title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ytr-text) !important;
+}
+
+ytd-video-renderer:hover #video-title {
+  color: var(--ytr-text) !important;
+}
+
+/* Search results metadata */
+ytd-video-renderer #metadata-line,
+ytd-video-renderer #metadata-line span,
+ytd-video-renderer .ytd-video-meta-block {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  color: var(--ytr-text-muted) !important;
+}
+
+/* Search results channel name */
+ytd-video-renderer ytd-channel-name {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+}
+
+/* Search results - LEFT ALIGN everything */
+ytd-search ytd-two-column-search-results-renderer {
+  max-width: 100% !important;
+}
+
+ytd-search #primary,
+ytd-search #primary.ytd-two-column-search-results-renderer {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+ytd-search #contents.ytd-section-list-renderer,
+ytd-search ytd-section-list-renderer,
+ytd-search ytd-item-section-renderer,
+ytd-search ytd-item-section-renderer #contents {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  padding-left: 0 !important;
+}
+
+ytd-search ytd-section-list-renderer {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+ytd-search ytd-item-section-renderer {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove centering from search header/filter area */
+ytd-search #header,
+ytd-search ytd-search-header-renderer,
+ytd-search #filter-menu {
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  margin: 0 !important;
+}
+
+/* Filter chips bar - left align */
+ytd-search #chip-bar,
+ytd-search yt-chip-cloud-renderer {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Video results container - force left */
+ytd-search ytd-video-renderer,
+ytd-search ytd-video-renderer.ytd-item-section-renderer {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+}
+
+/* The inner page container */
+ytd-search #page-manager,
+ytd-search #container {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+/* ============================================
+   CHANNEL PAGE - Fix empty space above thumbnails
+   ============================================ */
+
+/* Channel page grid uses ytd-grid-video-renderer or ytd-rich-item-renderer */
+/* Fix the ::before padding-top aspect ratio placeholder that creates blank space */
+ytd-browse[page-subtype="channels"] ytd-thumbnail::before,
+ytd-browse[page-subtype="channels"] yt-thumbnail-view-model::before,
+ytd-grid-video-renderer ytd-thumbnail::before,
+ytd-grid-video-renderer yt-thumbnail-view-model::before,
+ytd-rich-item-renderer ytd-thumbnail::before,
+ytd-rich-item-renderer yt-thumbnail-view-model::before {
+  display: none !important;
+  padding-top: 0 !important;
+}
+
+/* Channel grid items - proper sizing */
+ytd-grid-video-renderer {
+  margin: 0 !important;
+}
+
+/* Channel tab content - flex grid */
+ytd-browse[page-subtype="channels"] #contents.ytd-grid-renderer {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 28px 20px !important;
+}
+
+ytd-browse[page-subtype="channels"] ytd-grid-video-renderer {
+  flex: 0 0 calc(25% - 15px) !important;
+  max-width: calc(25% - 15px) !important;
+}
+
+@media (max-width: 1400px) {
+  ytd-browse[page-subtype="channels"] ytd-grid-video-renderer {
+    flex: 0 0 calc(33.333% - 16px) !important;
+    max-width: calc(33.333% - 16px) !important;
+  }
+}
+
+/* ============================================
+   HIDE SHORTS & CLEANUP
+   ============================================ */
+
+/* Hide ALL shorts elements */
 ytd-rich-section-renderer[is-shorts-grid],
 ytd-reel-shelf-renderer,
-ytd-rich-shelf-renderer[is-shorts] {
+ytd-rich-shelf-renderer[is-shorts],
+ytd-reel-item-renderer,
+[is-shorts],
+ytd-rich-item-renderer:has(ytd-reel-item-renderer),
+ytd-rich-section-renderer:has([is-shorts]),
+ytd-rich-section-renderer:has(ytd-reel-shelf-renderer),
+/* Shorts in search results */
+ytd-video-renderer:has([overlay-style="SHORTS"]),
+ytd-video-renderer:has(ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"]),
+/* Shorts shelf on channel pages */
+ytd-shelf-renderer:has([is-shorts]),
+ytd-shelf-renderer:has(ytd-reel-item-renderer) {
   display: none !important;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ============================================
+   VIDEO WATCH PAGE (PDP) - CLEAN STYLING
+   ============================================ */
+
+/* Main video container - add padding */
+ytd-watch-flexy {
+  background: var(--ytr-bg) !important;
+}
+
+ytd-watch-flexy #primary {
+  padding: 16px 24px !important;
+}
+
+ytd-watch-flexy #primary-inner {
+  max-width: 100% !important;
+}
+
+/* Video player - clean, no effects */
+ytd-watch-flexy #player-container,
+ytd-watch-flexy #movie_player,
+ytd-watch-flexy .html5-video-container,
+ytd-watch-flexy video {
+  filter: none !important;
+  background: #000 !important;
+}
+
+/* Video player wrapper - clean border */
+ytd-watch-flexy #player-container-outer,
+ytd-watch-flexy #player-container-inner {
+  border: 1px solid var(--ytr-border) !important;
+  background: #000 !important;
+}
+
+/* Remove any overlays on video */
+ytd-watch-flexy .yiv-player-overlay,
+ytd-watch-flexy .ytp-gradient-top,
+ytd-watch-flexy .ytp-gradient-bottom {
+  opacity: 0 !important;
+}
+
+/* Video title on watch page */
+ytd-watch-flexy #title h1,
+ytd-watch-flexy h1.ytd-watch-metadata {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: var(--ytr-text) !important;
+}
+
+/* Video info (views, date) */
+ytd-watch-flexy #info-strings,
+ytd-watch-flexy .ytd-watch-info-text {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  color: var(--ytr-text-muted) !important;
+}
+
+/* Action buttons (like, share, etc) */
+ytd-watch-flexy ytd-menu-renderer button,
+ytd-watch-flexy #actions button {
+  border: 1px solid var(--ytr-border) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+ytd-watch-flexy ytd-menu-renderer button:hover,
+ytd-watch-flexy #actions button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--ytr-border-hover) !important;
+}
+
+/* Channel info */
+ytd-watch-flexy #owner {
+  padding: 12px 0 !important;
+  border-bottom: 1px solid var(--ytr-border) !important;
+}
+
+/* Subscribe button — white on dark, PB style */
+ytd-watch-flexy #subscribe-button button,
+ytd-watch-flexy ytd-subscribe-button-renderer button {
+  background: var(--ytr-text) !important;
+  color: #000000 !important;
+  border: none !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  text-transform: uppercase !important;
+  font-size: 10px !important;
+  letter-spacing: 0.05em !important;
+}
+
+ytd-watch-flexy #subscribe-button button:hover,
+ytd-watch-flexy ytd-subscribe-button-renderer button:hover {
+  opacity: 0.9 !important;
+}
+
+/* Description box */
+ytd-watch-flexy #description-inner,
+ytd-watch-flexy ytd-text-inline-expander {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid var(--ytr-border) !important;
+  padding: 12px !important;
+}
+
+/* Related videos sidebar */
+ytd-watch-flexy #secondary {
+  padding: 16px !important;
+}
+
+ytd-watch-flexy ytd-compact-video-renderer {
+  margin-bottom: 8px !important;
+  padding: 8px !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+ytd-watch-flexy ytd-compact-video-renderer:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: var(--ytr-border) !important;
+}
+
+/* Related video thumbnails - smaller grayscale */
+ytd-watch-flexy ytd-compact-video-renderer img {
+  filter: grayscale(40%) brightness(0.9) !important;
+}
+
+ytd-watch-flexy ytd-compact-video-renderer:hover img {
+  filter: grayscale(0%) brightness(1) !important;
+}
+
+/* Comments section */
+ytd-watch-flexy ytd-comments {
+  padding-top: 16px !important;
+  border-top: 1px solid var(--ytr-border) !important;
+}
+
+ytd-watch-flexy #count.ytd-comments-header-renderer {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
+/* ============================================
+   MINI-PLAYER (bottom right video popup)
+   ============================================ */
+
+/* Main mini-player container - add border all around */
+ytd-miniplayer[active] {
+  border: 4px solid #212121 !important;
+  background: #212121 !important;
+  overflow: visible !important;
+}
+
+/* The video area inside mini-player */
+ytd-miniplayer .miniplayer-ui-container,
+ytd-miniplayer #player-container {
+  border: none !important;
+}
+
+/* Info bar below video already has the dark background, keep consistent */
+ytd-miniplayer .info-bar,
+ytd-miniplayer #info-bar {
+  background: #212121 !important;
+}
+
+/* ============================================
+   NEW VIDEO BADGE — PB style (white, not red)
+   ============================================ */
+
+.ytr-new-badge {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: var(--ytr-text) !important;
+  color: #000000 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  padding: 2px 6px !important;
+  z-index: 6 !important;
+  pointer-events: none !important;
+}
+
+/* Subtle pulse on NEW badge */
+.ytr-new-badge::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -1px !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  animation: ytr-badge-pulse 2.8s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes ytr-badge-pulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ============================================
+   TEXT SELECTION — PB style
+   ============================================ */
+
+::selection {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+/* ============================================
+   GLOBAL PB REFINEMENTS
+   ============================================ */
+
+/* All dialogs, menus, dropdowns — dark surface */
+ytd-popup-container,
+ytd-menu-popup-renderer,
+tp-yt-paper-dialog,
+tp-yt-paper-listbox,
+ytd-multi-page-menu-renderer {
+  background: var(--ytr-surface) !important;
+  border: 1px solid var(--ytr-border) !important;
+}
+
+/* Menu items */
+ytd-menu-service-item-renderer,
+tp-yt-paper-item {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+}
+
+ytd-menu-service-item-renderer:hover,
+tp-yt-paper-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Tooltips — PB mono style */
+tp-yt-paper-tooltip,
+.ytp-tooltip-text {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  background: var(--ytr-surface) !important;
+  border: 1px solid var(--ytr-border) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
 }
