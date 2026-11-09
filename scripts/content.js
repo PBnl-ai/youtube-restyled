@@ -50,6 +50,9 @@
     // Skip if already has corners
     if (element.querySelector('.ytr-corner')) return;
 
+    // Skip playlist header thumbnails — don't break their layout
+    if (element.closest('ytd-playlist-header-renderer, yt-page-header-renderer')) return;
+
     // Don't modify the thumbnail element directly — wrap corners in a
     // positioned overlay so we don't break YouTube's internal layout
     const overlay = document.createElement('div');

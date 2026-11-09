@@ -47,10 +47,12 @@ ytd-rich-grid-renderer, #primary, #secondary {
    GRID LAYOUT - FORCE 4 COLUMNS
    ============================================ */
 
-/* Main content area - spacing from sidebar AND right */
+/* Main content area - spacing from sidebar AND right (NOT playlist pages) */
 ytd-browse[page-subtype="home"],
 ytd-browse[page-subtype="subscriptions"],
-#primary.ytd-browse {
+ytd-browse[page-subtype="home"] #primary,
+ytd-browse[page-subtype="subscriptions"] #primary,
+ytd-browse[page-subtype="channels"] #primary {
   padding: 0 32px 0 32px !important;
 }
 
@@ -59,22 +61,24 @@ ytd-browse[page-subtype="subscriptions"],
   display: flex !important;
   flex-wrap: wrap !important;
   justify-content: flex-start !important;
-  padding: 20px 24px 32px 16px !important;
-  gap: 28px 20px !important;  /* vertical 28px, horizontal 20px */
+  padding: 12px 8px 24px 8px !important;
+  gap: 20px 12px !important;  /* vertical 20px, horizontal 12px */
   margin: 0 !important;
 }
 
 /* Rich grid renderer container */
 ytd-rich-grid-renderer {
-  padding: 8px 16px 0 16px !important;
+  padding: 4px 4px 0 4px !important;
   margin: 0 !important;
 }
 
 /* Extra spacing on the browse page container */
 ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
-ytd-two-column-browse-results-renderer {
-  padding-left: 16px !important;
-  padding-right: 16px !important;
+ytd-browse[page-subtype="home"] ytd-two-column-browse-results-renderer,
+ytd-browse[page-subtype="subscriptions"] ytd-two-column-browse-results-renderer,
+ytd-browse[page-subtype="channels"] ytd-two-column-browse-results-renderer {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
   margin-left: 0 !important;
 }
 
@@ -129,13 +133,13 @@ ytd-rich-section-renderer h2 {
 }
 
 /* Each video card - calculate width for 4 columns */
-/* With gap 20px horizontal: 3 gaps = 60px, so each card = (100% - 60px) / 4 */
+/* With gap 12px horizontal: 3 gaps = 36px, so each card = (100% - 36px) / 4 */
 ytd-rich-item-renderer {
-  flex: 0 0 calc(25% - 15px) !important;
-  max-width: calc(25% - 15px) !important;
-  width: calc(25% - 15px) !important;
+  flex: 0 0 calc(25% - 9px) !important;
+  max-width: calc(25% - 9px) !important;
+  width: calc(25% - 9px) !important;
   margin: 0 !important;
-  padding: 8px !important;
+  padding: 4px !important;
   box-sizing: border-box !important;
   background: linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 60%) !important;
   border: 1px solid rgba(255,255,255,0.04) !important;
@@ -148,20 +152,21 @@ ytd-rich-item-renderer:hover {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Responsive: 3 columns on smaller screens */
+/* Responsive: 3 columns on medium screens */
 @media (max-width: 1400px) {
   ytd-rich-item-renderer {
-    flex: 0 0 calc(33.333% - 16px) !important;
-    max-width: calc(33.333% - 16px) !important;
-    width: calc(33.333% - 16px) !important;
+    flex: 0 0 calc(33.333% - 8px) !important;
+    max-width: calc(33.333% - 8px) !important;
+    width: calc(33.333% - 8px) !important;
   }
 }
 
+/* Responsive: 2 columns on smaller screens */
 @media (max-width: 1000px) {
   ytd-rich-item-renderer {
-    flex: 0 0 calc(50% - 16px) !important;
-    max-width: calc(50% - 16px) !important;
-    width: calc(50% - 16px) !important;
+    flex: 0 0 calc(50% - 6px) !important;
+    max-width: calc(50% - 6px) !important;
+    width: calc(50% - 6px) !important;
   }
 }
 
@@ -169,9 +174,13 @@ ytd-rich-item-renderer:hover {
    THUMBNAILS - GRAYSCALE + BORDER
    ============================================ */
 
-/* Thumbnail container styling */
-ytd-thumbnail,
-yt-thumbnail-view-model,
+/* Thumbnail container styling (exclude playlist page header) */
+ytd-rich-item-renderer ytd-thumbnail,
+ytd-rich-item-renderer yt-thumbnail-view-model,
+ytd-video-renderer ytd-thumbnail,
+ytd-grid-video-renderer ytd-thumbnail,
+ytd-compact-video-renderer ytd-thumbnail,
+ytd-playlist-video-renderer ytd-thumbnail,
 a#thumbnail {
   position: relative !important;
   border: 1px solid var(--ytr-border) !important;
@@ -179,11 +188,12 @@ a#thumbnail {
   display: block !important;
 }
 
-/* GRAYSCALE on all thumbnail images */
+/* GRAYSCALE on all thumbnail images (scoped to video cards, not playlist header) */
 ytd-rich-item-renderer img,
-ytd-thumbnail img,
-yt-thumbnail-view-model img,
-yt-image img,
+ytd-video-renderer ytd-thumbnail img,
+ytd-grid-video-renderer ytd-thumbnail img,
+ytd-compact-video-renderer ytd-thumbnail img,
+ytd-playlist-video-renderer ytd-thumbnail img,
 ytd-playlist-thumbnail img {
   filter: grayscale(60%) brightness(0.8) !important;
   transition: all 0.35s ease !important;
@@ -1298,6 +1308,105 @@ ytd-miniplayer #info-bar {
 ::selection {
   background: rgba(255, 255, 255, 0.2) !important;
   color: white !important;
+}
+
+/* ============================================
+   PLAYLIST PAGE — undo layout overrides, keep aesthetic
+   ============================================ */
+
+/* Undo padding overrides on playlist page containers */
+ytd-browse[page-subtype="playlist"],
+ytd-browse[page-subtype="playlist"] #primary,
+ytd-browse[page-subtype="playlist"] #primary.ytd-browse {
+  padding: 0 !important;
+}
+
+/* The playlist header (left sticky panel with title/play button) */
+ytd-browse[page-subtype="playlist"] ytd-playlist-header-renderer {
+  background: var(--ytr-surface) !important;
+  border: 1px solid var(--ytr-border) !important;
+}
+
+/* Playlist header thumbnail — grayscale */
+ytd-browse[page-subtype="playlist"] ytd-playlist-header-renderer img {
+  filter: grayscale(60%) brightness(0.8) !important;
+  transition: all 0.35s ease !important;
+}
+
+ytd-browse[page-subtype="playlist"] ytd-playlist-header-renderer:hover img {
+  filter: grayscale(0%) brightness(1) !important;
+}
+
+/* Playlist video list — vertical column, no grid */
+ytd-playlist-video-list-renderer #contents {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+/* Each playlist video row */
+ytd-playlist-video-renderer {
+  flex: none !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 8px 16px !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  box-sizing: border-box !important;
+}
+
+ytd-playlist-video-renderer:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Playlist thumbnails — keep aspect ratio intact */
+ytd-playlist-video-renderer ytd-thumbnail::before,
+ytd-playlist-video-renderer yt-thumbnail-view-model::before {
+  display: block !important;
+}
+
+/* Playlist thumbnail images — grayscale */
+ytd-playlist-video-renderer img,
+ytd-playlist-video-renderer yt-image img,
+ytd-playlist-video-renderer yt-thumbnail-view-model img {
+  filter: grayscale(60%) brightness(0.8) !important;
+  transition: all 0.35s ease !important;
+}
+
+ytd-playlist-video-renderer:hover img,
+ytd-playlist-video-renderer:hover yt-image img,
+ytd-playlist-video-renderer:hover yt-thumbnail-view-model img {
+  filter: grayscale(0%) brightness(1) !important;
+}
+
+/* Playlist video titles */
+ytd-playlist-video-renderer #video-title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--ytr-text) !important;
+}
+
+/* Playlist metadata */
+ytd-playlist-video-renderer #byline-container,
+ytd-playlist-video-renderer #metadata-line,
+ytd-playlist-video-renderer ytd-channel-name {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  color: var(--ytr-text-muted) !important;
+}
+
+/* Unavailable videos banner */
+ytd-playlist-video-list-renderer ytd-alert-with-button-renderer {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid var(--ytr-border) !important;
+  font-family: 'Inter', sans-serif !important;
+  margin: 8px 0 !important;
 }
 
 /* ============================================
